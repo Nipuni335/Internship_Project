@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from "./pages/ProfilePage"; 
 
 const App = () => (
   <BrowserRouter>
@@ -26,6 +27,7 @@ const App = () => (
             success: { iconTheme: { primary: "#25685c", secondary: "#fff" } },
           }}
         />
+        
 
         <Routes>
           {/* Public routes */}
@@ -41,6 +43,16 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+           {/* --- ADDED PROFILE ROUTE --- */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
 
           {/* Default redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

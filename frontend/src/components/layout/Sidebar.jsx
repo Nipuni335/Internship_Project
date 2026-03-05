@@ -4,6 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useNotes } from "../../context/NotesContext";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; 
 
 // ── Strip HTML tags for preview text ─────────────────────────────────────────
 const stripHtml = (html) => {
@@ -47,6 +48,7 @@ const NoteCard = ({ note, isActive, onClick }) => {
 };
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const { notes, activeNote, setActiveNote, createNote, searchNotes, clearSearch, searchResults, searchQuery, loading } = useNotes();
   const { user, logout } = useAuth();
   const [searchInput, setSearchInput] = useState("");
@@ -146,22 +148,44 @@ const Sidebar = () => {
       </div>
 
       {/* User footer */}
-      <div className="border-t border-gray-100 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-forest-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-            {user?.name?.charAt(0).toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-700 truncate">{user?.name}</p>
-            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-          </div>
-          <button onClick={logout} title="Logout" className="text-gray-400 hover:text-red-500 transition-colors">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
-        </div>
-      </div>
+<div className="border-t border-gray-100 px-4 py-3">
+
+  <div
+    className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition"
+    onClick={() => navigate("/profile")}   // ✅ navigation works
+  >
+
+    <div className="w-8 h-8 rounded-full bg-forest-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+      {user?.name?.charAt(0).toUpperCase()}
+    </div>
+
+    <div className="flex-1 min-w-0">
+      <p className="text-sm font-medium text-gray-700 truncate">
+        {user?.name}
+      </p>
+      <p className="text-xs text-gray-400 truncate">
+        {user?.email}
+      </p>
+    </div>
+
+    <button
+      onClick={(e) => {
+        e.stopPropagation();   // prevents profile navigation
+        logout();
+      }}
+      title="Logout"
+      className="text-gray-400 hover:text-red-500 transition-colors"
+    >
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+        />
+      </svg>
+    </button>
+
+  </div>
+
+</div>
     </aside>
   );
 };
